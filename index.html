@@ -291,7 +291,7 @@
  
                     <span id="weather-location-topbar" style="display: none;"></span>
  
-                    <div style="position: relative; width: 50%; display: flex; gap: 6px;" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+                    <div style="display: none !important; position: relative; width: 50%; display: flex; gap: 6px;" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
  
                         <input type="text" id="city-search-input" placeholder="Mesto..." 
                                onfocus="zobrazHistoriu()"
@@ -942,6 +942,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function hladajMesto() {
+    return; // Týmto funkciu bezpečne vypneme bez toho, aby sme ju mazali
+    
     const inputEl = document.getElementById('city-search-input');
     if (!inputEl) return;
     
