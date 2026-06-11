@@ -113,6 +113,7 @@
         
         body.screensaver-mode #time { font-size: 30vw; transform: scaleY(1.20); letter-spacing: -1vw; margin-top: 8vh; }
         
+         Riedenie zobrazenia dátumu */
         #date-block { 
             display: flex; 
             align-items: flex-end; 
@@ -222,11 +223,15 @@
             white-space: nowrap !important;
             line-height: 1.0 !important;
         }
+
+        /* --- NOVO PRIDANÉ ŠTÝLY PRE HODINOVÝ GRAF --- */
+        .chart-rain-info { font-size: 1.5vw; color: #4dabff; height: 2vw; display: flex; align-items: center; font-weight: 500; }
+        .chart-icon-info { font-size: 3vw; margin: 4px 0; }
+        .chart-temp-info { font-size: 2.2vw; font-weight: 400; margin-bottom: 4px; }
         
     </style>
 </head>
 
-    
 <body id="mainBody">
 
     <audio id="audioPlayer" preload="none" playsinline></audio>
@@ -401,6 +406,8 @@ let poslednyDatumMenin = "";
 let weatherDataBackup = null; 
 let currentPlayingType = ""; 
 let weatherOpenedFrom = ""; 
+let idleTimer;
+let pocasieTimer; // Správne deklarované navrchu
 
 async function updateNameday() {
     const now = new Date();
@@ -507,17 +514,6 @@ async function updateWeather(lat = 48.1421, lon = 17.1964) {
             }
         }
 
-        const topLocationEl = document.getElementById('weather-location-topbar');
-        if (topLocationEl) {
-            if (window.customCityName) {
-                topLocationEl.textContent = window.customCityName;
-            } else if (d.timezone && d.timezone.includes('/')) {
-                topLocationEl.textContent = d.timezone.split('/')[1].replace(/_/g, ' ');
-            } else {
-                topLocationEl.textContent = `${lat.toFixed(2)}°N, ${lon.toFixed(2)}°E`;
-            }
-        }
-
         const rawTemp = d.current.temperature_2m;
         const rawApparent = d.current.apparent_temperature; 
         const currentTemp = Math.round(rawTemp) + '°C';
@@ -594,10 +590,8 @@ async function updateWeather(lat = 48.1421, lon = 17.1964) {
 }
 
 function inicializujPocasie() {
-    // Okamžite natiahni defaultnú polohu (Bratislava)
     updateWeather(48.1421, 17.1964);
 
-    // Pravidelná aktualizácia každých 10 minút
     window.weatherInterval = setInterval(() => {
         const aktualnyLat = window.customLat || 48.1421;
         const aktualnyLon = window.customLon || 17.1964;
@@ -804,9 +798,6 @@ function openSpotify(id) {
     window.location.href = url; 
 }
 
-// --- ŠETRIČ A DOTYKY ---
-let idleTimer;
-
 function resetIdleTimer() {
     document.body.classList.remove('screensaver-mode');
     clearTimeout(idleTimer);
@@ -825,9 +816,6 @@ function klikNaHodiny(e) {
     if (document.body.classList.contains('screensaver-mode')) { resetIdleTimer(); } 
     else { clearTimeout(idleTimer); document.body.classList.add('screensaver-mode'); }
 }
-
-// --- OVLÁDANIE AUTOMATICKÉHO ČASOVAČA ---
-let pocasieTimer;
         
 function otvorPocasie(e, zdroj = 'radio') {
     if (e) { e.stopPropagation(); if (e.cancelable) e.preventDefault(); }
