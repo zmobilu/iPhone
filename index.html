@@ -39,6 +39,7 @@
         .minutes-part { font-weight: 200; color: #ffffff; margin-left: 5px; } 
         .red-digit { color: #eb0028 !important; } 
         .blue-digit { color: #307CEB !important; }
+        .orange-digit { color: #FF7F27 !important; } 
         
         /* Štýl pre info riadok v rádio režime */
         .radio-info-wrapper { display: flex;  align-items: center;  gap: 12px; margin-top: 10px;  font-size: 3.5vw; font-weight: 300; color: #aaa;}
@@ -84,7 +85,20 @@
         .sub-btn.playing { border: 2px solid #ff9f0a !important; }
         
         .buttons-section { width: 35%; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 0.6fr 1fr 1fr 1fr; gap: 8px; padding: 10px; background: #050505; box-sizing: border-box;}
-        
+        @media (min-width: 800px) {
+        /* Zúžime panel z 35% na 24%, aby tlačidlá neboli široké obdĺžniky */
+        .buttons-section { width: 24%; grid-template-rows: 0.8fr 1fr 1fr 1fr; /* Vyváženejší pomer pre Power gombík */gap: 12px; padding: 15px; }
+        /* Rozšírime hodiny a šetrič na zvyšných 76% */
+        .clock-section {width: 76%; }
+        /* Zväčšenie ikon v hlavných gombíkoch, aby zodpovedali veľkej ploche */
+        .vypni i { font-size: 5.5vw !important; }
+        .spotify i { font-size: 5vw !important; }
+        .btn.cro i { font-size: 5vw !important; }
+        /* Úprava textu na navigačných tlačidlách (ak by tam boli) */
+        .btn { font-size: 16px; border-radius: 22px; }
+        /* Rozmer malých štvorcových gombíkov sub-staníc (schranz, rock, atď.) */
+        .sub-btn { width: 100px; height: 100px; border-radius: 16px; }
+        }
         .page-group { display: contents; }
         .page-group.hidden { display: none !important; }
 
@@ -469,9 +483,9 @@ function updateClock() {
     
     let h_display = h;
     if (h[0] === '1') {
-        h_display = `<span class="blue-digit">1</span>${h.substring(1)}`;
+        h_display = `<span class="red-digit">1</span>${h.substring(1)}`;
     } else if (h[0] === '2') {
-        h_display = `<span class="red-digit">2</span>${h.substring(1)}`;
+        h_display = `<span class="orange-digit">2</span>${h.substring(1)}`;
     }
     
     document.getElementById('h-part').innerHTML = h_display;
