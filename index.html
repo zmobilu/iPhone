@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>iPhone_dashboard</title>
+    <title>iPhone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="data:,">
     
@@ -24,7 +24,7 @@
         /* --- REŽIM RÁDIO --- */
         /* Sekcia s hodinami (vpravo) bude zaberať presne 65% */
     .clock-section { 
-            width: 65%; 
+            width: 70%; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
@@ -84,7 +84,7 @@
 
         .sub-btn.playing { border: 2px solid #ff9f0a !important; }
         
-        .buttons-section { width: 35%; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 0.6fr 1fr 1fr 1fr; gap: 8px; padding: 10px; background: #050505; box-sizing: border-box;}
+        .buttons-section { width: 30%; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 0.6fr 1fr 1fr 1fr; gap: 8px; padding: 10px; background: #050505; box-sizing: border-box;}
         @media (min-width: 800px) {
         /* Zúžime panel z 35% na 24%, aby tlačidlá neboli široké obdĺžniky */
         .buttons-section { width: 24%; grid-template-rows: 0.8fr 1fr 1fr 1fr; /* Vyváženejší pomer pre Power gombík */gap: 12px; padding: 15px; }
@@ -126,7 +126,7 @@
         
         body.screensaver-mode .clock-section { width: 100vw; border: none; display: flex; flex-direction: row; align-items: stretch; }
 
-        .ss-left-col { display: flex; flex-direction: column; justify-content: flex-start !important; align-items: center; padding: 0; width: 35%; }
+        .ss-left-col { display: flex; flex-direction: column; justify-content: flex-start !important; align-items: center; padding: 0; width: 30%; }
         
         body.screensaver-mode #time { font-size: 30vw; transform: scaleY(1.20); letter-spacing: -1vw; margin-top: 8vh; }
         
@@ -191,7 +191,7 @@
             align-items: center; 
             background: #000; 
             padding: 0; 
-            width: 65%; 
+            width: 70%; 
             border-left: 1px solid #1a1a1a; 
         }
         .current-weather-group { margin-top: 1vh; text-align: center; display: flex; flex-direction: column; align-items: center;}
