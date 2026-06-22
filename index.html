@@ -754,8 +754,17 @@ function prepniDenGrafu(e, dayIndex) {
 // --- AUDIO LOGIKA ---
 const audio = document.getElementById('audioPlayer');
 
-function playRadio(url, element, type) {
-    currentPlayingType = type; 
+// Nové premenné pre zapamätanie posledného hraného rádia
+    let lastRadioUrl = "";
+    let lastRadioElement = null;
+    let lastRadioType = "";
+
+    function playRadio(url, element, type) {
+        // Uložíme si aktuálne rádio do pamäte pre prípadné opätovné zapnutie
+        lastRadioUrl = url;
+        lastRadioElement = element;
+        lastRadioType = type;
+        currentPlayingType = type; 
     
     // Odstránime oranžový rámček zo všetkých tlačidiel
     document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
@@ -822,17 +831,30 @@ function aktualizujSubPanely(type) {
 }
     
 function stopRadio() {
-    audio.pause(); audio.src = "";
-    currentPlayingType = ""; 
+    // AK RÁDIO PRÁVE HRÁ (alebo hrá Spotify): zastavíme ho
+    if (currentPlayingType !== "") {
+        audio.pause(); 
+        audio.src = "";
+        currentPlayingType = "";
     document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
     document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing')); 
     
-    // ZJEDNODUŠENÉ: Schováme komplet všetky sub-panely jedným zavolaním
+    const container = document.getElementById('integrated-spotify-container');
+    const frame = document.getElementById('spotify-player-frame');
+    if (container) container.style.display = 'none';
+    if (frame) frame.src = "";
+    
     aktualizujSubPanely("none");
     resetIdleTimer();
     
     const radioInfoEl = document.getElementById('ss-radio-info');
     if (radioInfoEl) radioInfoEl.textContent = "";
+
+    }
+    // AK RÁDIO NEHRÁ: skontrolujeme, či máme v pamäti predchádzajúce rádio a znova ho zapneme
+    else if (lastRadioUrl !== "") {
+        playRadio(lastRadioUrl, lastRadioElement, lastRadioType);
+    }
 }
     
 function showSpotify() {
