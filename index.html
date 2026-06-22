@@ -298,7 +298,7 @@
                 <span id="m-part" class="minutes-part">00</span>
             </div>
             
-            <div id="ss-radio-info" class="weather-details-hide"></div>
+            <div id="ss-radio-info" class="weather-details-hide" onpointerdown="event.stopPropagation(); if(event.cancelable) event.preventDefault(); stopRadio();" style="pointer-events: auto !important; cursor: pointer;"></div>
 
             <div id="weather-details-top-inline" class="weather-details-only" style="display: none; flex-direction: column; width: 100%; height: 68vh; padding: 10px 10px 0 10px; box-sizing: border-box; justify-content: space-between;">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 5vh; gap: 10px;">
@@ -438,6 +438,9 @@ let poslednyDatumMenin = "";
 let weatherDataBackup = null; 
 let currentPlayingType = ""; 
 let weatherOpenedFrom = ""; 
+let lastRadioUrl = "";
+let lastRadioElement = null;
+let lastRadioType = "";
 
 async function updateNameday() {
     const now = new Date();
@@ -848,7 +851,7 @@ function stopRadio() {
     resetIdleTimer();
     
     const radioInfoEl = document.getElementById('ss-radio-info');
-    if (radioInfoEl) radioInfoEl.textContent = "";
+    if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">Zapnúť</small> 📻`;
 
     }
     // AK RÁDIO NEHRÁ: skontrolujeme, či máme v pamäti predchádzajúce rádio a znova ho zapneme
@@ -952,6 +955,20 @@ function zatvorPocasie(e) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // AUTOMATICKÉ NASTAVENIE PREDVOLENÉHO RÁDIA Z MRIEŽKY (Slovensko)
+    const predvoleneTlacitko = document.querySelector('.btn.rozhlas');
+    if (predvoleneTlacitko) {
+        // Vytiahneme text z atribútu onclick: playRadio('URL', this, 'slovensko')
+        const onclickText = predvoleneTlacitko.getAttribute('onclick') || "";
+        const matches = onclickText.match(/'([^']+)'/g); // nájde texty v apostrofoch
+        
+        if (matches && matches.length >= 2) {
+            lastRadioUrl = matches[0].replace(/'/g, "");  // prvá závislosť je URL
+            lastRadioType = matches[1].replace(/'/g, ""); // druhá je typ ('slovensko')
+            lastRadioElement = predvoleneTlacitko;         // priradíme samotné tlačidlo
+        }
+    }
+
     const timeEl = document.getElementById('time');
     const weatherEl = document.getElementById('ss-weather-trigger');
     const grafContainer = document.getElementById('weather-details-top-inline');
