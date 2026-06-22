@@ -292,14 +292,14 @@
         </div>
         
         <div class="ss-right-col">
-        
-            <div id="time" class="weather-details-hide">
-                <span id="h-part" class="hours-part">00</span>
-                <span id="m-part" class="minutes-part">00</span>
-            </div>
-            
-            <div id="ss-radio-info" class="weather-details-hide" onpointerdown="event.stopPropagation(); if(event.cancelable) event.preventDefault(); stopRadio();" style="pointer-events: auto !important; cursor: pointer;"></div>
 
+            <div id="ss-radio-info" class="weather-details-hide" onpointerdown="event.stopPropagation(); if(event.cancelable) event.preventDefault(); stopRadio();" style="pointer-events: auto !important; cursor: pointer; z-index: 9999 !important;"></div>
+
+<div id="time" class="weather-details-hide">
+    <span id="h-part" class="hours-part">00</span>
+    <span id="m-part" class="minutes-part">00</span>
+</div>
+            
             <div id="weather-details-top-inline" class="weather-details-only" style="display: none; flex-direction: column; width: 100%; height: 68vh; padding: 10px 10px 0 10px; box-sizing: border-box; justify-content: space-between;">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 5vh; gap: 10px;">
  
@@ -807,12 +807,11 @@ const audio = document.getElementById('audioPlayer');
     audio.volume = VOLUME_MAP[type] || 1.0;
     audio.src = url; 
     audio.play();
-    resetIdleTimer();
+    resetIdleTimer(!document.body.classList.contains('screensaver-mode'));
     
-    // Bezpečný zápis textu pre šetrič, ktorý nespôsobí pád WebKitu
     const radioInfoEl = document.getElementById('ss-radio-info');
     if (radioInfoEl) {
-        radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.7; text-transform: none; margin-right: 8px;">hrá:</small>${type.toUpperCase()}`;
+    radioInfoEl.innerHTML = `${type.toUpperCase()} <i class="fa-solid fa-power-off" style="color: #eb0028; font-size: 0.8em; margin-left: 12px;"></i>`;
     }
 }
 
@@ -834,27 +833,28 @@ function aktualizujSubPanely(type) {
 }
     
 function stopRadio() {
-    // AK RÁDIO PRÁVE HRÁ (alebo hrá Spotify): zastavíme ho
+    // AK RÁDIO PRÁVE HRÁ: zastavíme ho a udržíme šetrič
     if (currentPlayingType !== "") {
         audio.pause(); 
         audio.src = "";
         currentPlayingType = "";
-    document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
-    document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing')); 
-    
-    const container = document.getElementById('integrated-spotify-container');
-    const frame = document.getElementById('spotify-player-frame');
-    if (container) container.style.display = 'none';
-    if (frame) frame.src = "";
-    
-    aktualizujSubPanely("none");
-    resetIdleTimer();
-    
-    const radioInfoEl = document.getElementById('ss-radio-info');
-    if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">Zapnúť</small> 📻`;
-
+        document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
+        document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing')); 
+        
+        const container = document.getElementById('integrated-spotify-container');
+        const frame = document.getElementById('spotify-player-frame');
+        if (container) container.style.display = 'none';
+        if (frame) frame.src = "";
+        
+        aktualizujSubPanely("none");
+        resetIdleTimer(!document.body.classList.contains('screensaver-mode'));
+        
+        const radioInfoEl = document.getElementById('ss-radio-info');
+        if (radioInfoEl) {
+        radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni posledné</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
+        }
     }
-    // AK RÁDIO NEHRÁ: skontrolujeme, či máme v pamäti predchádzajúce rádio a znova ho zapneme
+    // AK RÁDIO NEHRÁ: zapneme posledné z pamäte
     else if (lastRadioUrl !== "") {
         playRadio(lastRadioUrl, lastRadioElement, lastRadioType);
     }
@@ -866,7 +866,7 @@ function showSpotify() {
     aktualizujSubPanely("spotify");
     const spotifyBtn = document.querySelector('.spotify');
     if (spotifyBtn) spotifyBtn.classList.add('playing');
-    resetIdleTimer();
+    resetIdleTimer(!document.body.classList.contains('screensaver-mode'));
     const radioInfoEl = document.getElementById('ss-radio-info');
     if (radioInfoEl) {
         radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.7; text-transform: none; margin-right: 8px;">hrá:</small>SPOTIFY`;
@@ -881,8 +881,8 @@ function openSpotify(id) {
 // --- ŠETRIČ A DOTYKY ---
 let idleTimer;
 
-function resetIdleTimer() {
-    document.body.classList.remove('screensaver-mode');
+function resetIdleTimer(wakingUp = true) {
+    if (wakingUp) document.body.classList.remove('screensaver-mode');
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => document.body.classList.add('screensaver-mode'), 20000);
 }
@@ -891,13 +891,17 @@ document.addEventListener('touchstart', function(e) {
     if (e.target.closest('#time') || e.target.closest('#ss-weather-trigger') || e.target.closest('#weather-details-top-inline') || e.target.closest('#extended-forecast-container')) {
         return; 
     }
-    resetIdleTimer();
+    resetIdleTimer(!document.body.classList.contains('screensaver-mode'));
 }, { passive: true });
 
 function klikNaHodiny(e) {
-    if (e) { e.stopPropagation(); e.preventDefault(); }
-    if (document.body.classList.contains('screensaver-mode')) { resetIdleTimer(); } 
-    else { clearTimeout(idleTimer); document.body.classList.add('screensaver-mode'); }
+    if (e) { e.stopPropagation(); if (e.cancelable) e.preventDefault(); }
+    if (document.body.classList.contains('screensaver-mode')) { 
+        resetIdleTimer(true); 
+    } else { 
+        clearTimeout(idleTimer); 
+        document.body.classList.add('screensaver-mode'); 
+    }
 }
 
 // --- OVLÁDANIE AUTOMATICKÉHO ČASOVAČA ---
