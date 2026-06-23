@@ -249,7 +249,7 @@
         /* Pridaj na koniec sekcie <style> */
 body.screensaver-mode.night-mode .hours-part,
 body.screensaver-mode.night-mode .minutes-part {
-    color: #ff4500 !important; /* Sem si daj požadovanú nočnú farbu, napr. tlmenú oranžovú/červenú */
+    color: #ffff00 !important; /* Sem si daj požadovanú nočnú farbu, napr. tlmenú oranžovú/červenú */
 }
     </style>
 </head>
@@ -503,11 +503,12 @@ function updateClock() {
             bodyEl.classList.remove('night-mode');
         }
     }
+    // --- TÚTO ČASŤ UPRAV TAKTO ---
     let h_display = h;
+    
+    // Červená bude iba prvá cifra 1 (napr. pri 10, 11, 12... až 19 hodine)
     if (h[0] === '1') {
         h_display = `<span class="red-digit">1</span>${h.substring(1)}`;
-    } else if (h[0] === '2') {
-        h_display = `<span class="orange-digit">2</span>${h.substring(1)}`;
     }
     
     document.getElementById('h-part').innerHTML = h_display;
