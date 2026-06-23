@@ -245,6 +245,12 @@
         .chart-rain-info { font-size: 1.5vw; color: #4dabff; height: 2vw; display: flex; align-items: center; font-weight: 500; }
         .chart-icon-info { font-size: 3vw; margin: 4px 0; }
         .chart-temp-info { font-size: 2.2vw; font-weight: 400; margin-bottom: 4px; }
+
+        /* Pridaj na koniec sekcie <style> */
+body.screensaver-mode.night-mode .hours-part,
+body.screensaver-mode.night-mode .minutes-part {
+    color: #ff4500 !important; /* Sem si daj požadovanú nočnú farbu, napr. tlmenú oranžovú/červenú */
+}
     </style>
 </head>
 
@@ -482,7 +488,21 @@ function updateClock() {
     const now = new Date();
     let h = String(now.getHours()).padStart(2, '0');
     let m = String(now.getMinutes()).padStart(2, '0');
-    
+
+    // --- ZMENA: Dynamická detekcia noci po západe slnka do východu ---
+    const currentTimeStr = `${h}:${m}`;
+    const sunriseStr = document.getElementById('sun-rise-val')?.textContent;
+    const sunsetStr = document.getElementById('sun-set-val')?.textContent;
+    const bodyEl = document.getElementById('mainBody');
+
+    if (sunriseStr && sunsetStr && sunriseStr !== '--:--' && sunsetStr !== '--:--') {
+        // Ak je aktuálny čas po západe slnka ALEBO pred východom slnka, je noc
+        if (currentTimeStr >= sunsetStr || currentTimeStr < sunriseStr) {
+            bodyEl.classList.add('night-mode');
+        } else {
+            bodyEl.classList.remove('night-mode');
+        }
+    }
     let h_display = h;
     if (h[0] === '1') {
         h_display = `<span class="red-digit">1</span>${h.substring(1)}`;
