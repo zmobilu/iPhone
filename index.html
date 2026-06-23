@@ -833,28 +833,27 @@ function aktualizujSubPanely(type) {
 }
     
 function stopRadio() {
-    // AK RÁDIO PRÁVE HRÁ: zastavíme ho a udržíme šetrič
+    // AK RÁDIO PRÁVE HRÁ (alebo hrá Spotify): zastavíme ho
     if (currentPlayingType !== "") {
         audio.pause(); 
         audio.src = "";
         currentPlayingType = "";
-        document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
-        document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing')); 
-        
-        const container = document.getElementById('integrated-spotify-container');
-        const frame = document.getElementById('spotify-player-frame');
-        if (container) container.style.display = 'none';
-        if (frame) frame.src = "";
-        
-        aktualizujSubPanely("none");
-        resetIdleTimer(!document.body.classList.contains('screensaver-mode'));
-        
-        const radioInfoEl = document.getElementById('ss-radio-info');
-        if (radioInfoEl) {
-        radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni posledné</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
-        }
+    document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
+    document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing')); 
+    
+    const container = document.getElementById('integrated-spotify-container');
+    const frame = document.getElementById('spotify-player-frame');
+    if (container) container.style.display = 'none';
+    if (frame) frame.src = "";
+    
+    aktualizujSubPanely("none");
+    resetIdleTimer(!document.body.classList.contains('screensaver-mode'));
+    
+    const radioInfoEl = document.getElementById('ss-radio-info');
+    if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;"></small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
+    aktualizujTitulokStranky();
     }
-    // AK RÁDIO NEHRÁ: zapneme posledné z pamäte
+    // AK RÁDIO NEHRÁ: skontrolujeme, či máme v pamäti predchádzajúce rádio a znova ho zapneme
     else if (lastRadioUrl !== "") {
         playRadio(lastRadioUrl, lastRadioElement, lastRadioType);
     }
