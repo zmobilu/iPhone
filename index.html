@@ -1050,7 +1050,13 @@ const audio = document.getElementById('audioPlayer');
     
     audio.volume = VOLUME_MAP[type] || 1.0;
     audio.src = url; 
-    audio.play();
+    // Hľadaj na konci funkcie playRadio() riadok audio.play(); a vymeň ho za tento bezpečný:
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.log("Prehrávanie bolo bezpečne prerušené pred načítaním.");
+        });
+    }
     resetIdleTimer();
     
     // Bezpečný zápis textu pre šetrič, ktorý nespôsobí pád WebKitu
@@ -1079,8 +1085,10 @@ function aktualizujSubPanely(type) {
 }
     
 function stopRadio() {
-    // AK RÁDIO PRÁVE HRÁ (alebo hrá Spotify): zastavíme ho
-    if (currentPlayingType !== "") {
+    const settingsBox = document.getElementById('settings-container');
+    const nastaveniaSuOtvorene = settingsBox && settingsBox.style.display === 'block';
+   // AK RÁDIO PRÁVE HRÁ (alebo hrá Spotify): zastavíme ho
+    if (currentPlayingType !== "" && currentPlayingType !== "settings") {
         audio.pause(); 
         audio.src = "";
         currentPlayingType = "";
@@ -1095,7 +1103,19 @@ function stopRadio() {
         const radioInfoEl = document.getElementById('ss-radio-info');
         if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
     }
-    // UPRAVENÉ: Načítanie z localStorage pri opätovnom zapnutí
+    // PRIDANÉ: Ak nič nehrá, ale sme v nastaveniach -> zatvor ich a pusť rádio
+    else if (nastaveniaSuOtvorene) {
+        prepniNastavenia(); // toto skryje nastavenia a vráti hodiny
+        const savedRadioUrl = localStorage.getItem('kiosk_last_radio_url');
+        const savedRadioType = localStorage.getItem('kiosk_last_radio_type');
+        
+        if (savedRadioUrl && savedRadioType) {
+            playRadio(savedRadioUrl, null, savedRadioType);
+        } else if (lastRadioUrl !== "") {
+            playRadio(lastRadioUrl, lastRadioElement, lastRadioType);
+        }
+    }
+    // Načítanie z localStorage pri opätovnom zapnutí z domovskej obrazovky
     else {
         const savedRadioUrl = localStorage.getItem('kiosk_last_radio_url');
         const savedRadioType = localStorage.getItem('kiosk_last_radio_type');
@@ -1145,8 +1165,29 @@ document.addEventListener('touchstart', function(e) {
 
 function klikNaHodiny(e) {
     if (e) { e.stopPropagation(); e.preventDefault(); }
-    if (document.body.classList.contains('screensaver-mode')) { resetIdleTimer(); } 
-    else { clearTimeout(idleTimer); document.body.classList.add('screensaver-mode'); }
+    
+    const bodyEl = document.getElementById('mainBody');
+    
+    // PRIDANÉ: Ak klikneš na hodiny počas aktívneho nočného režimu
+    if (bodyEl.classList.contains('full-night-mode')) {
+        // Vypočítame čas, kedy snooze skončí (aktuálny čas + minúty z nastavení prepočítané na milisekundy)
+        nocnyRezimSnoozeDo = Date.now() + (cfgSnoozeMin * 60 * 1000);
+        
+        // Okamžite zhodíme nočný režim, aby používateľ nemusel čakať na ďalšiu sekundu intervalu hodín
+        bodyEl.classList.remove('full-night-mode');
+        
+        // Resetujeme idle timer, aby dashboard skočil do rádio/denného režimu a hneď nepadol späť
+        resetIdleTimer();
+        return;
+    }
+    
+    // Pôvodná logika pre denný režim a šetrič
+    if (document.body.classList.contains('screensaver-mode')) { 
+        resetIdleTimer(); 
+    } else { 
+        clearTimeout(idleTimer); 
+        document.body.classList.add('screensaver-mode'); 
+    }
 }
 
 // --- OVLÁDANIE AUTOMATICKÉHO ČASOVAČA ---
