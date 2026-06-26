@@ -125,6 +125,7 @@
         body.screensaver-mode #spotify-links-container { display: none !important; }
         body.screensaver-mode #integrated-spotify-container { display: none !important; }
         body.screensaver-mode .ss-only { display: flex !important; }
+        body.screensaver-mode #settings-container { display: none !important; }
         
         body.screensaver-mode .clock-section { width: 100vw; border: none; display: flex; flex-direction: row; align-items: stretch; }
 
@@ -544,28 +545,38 @@ function prepniNastavenia() {
     
     const hodinyEl = document.getElementById('time');
     const infoRiadokEl = document.querySelector('.radio-info-wrapper');
+    const spotifyContainer = document.getElementById('spotify-links-container');
     const croContainer = document.getElementById('cro-links-container');
-    const hlavnaMriezka = document.querySelector('.buttons-section');
+    
+    // Zrušíme akékoľvek označenie playing z rádio tlačidiel
+    document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing'));
     
     if (isVisible) {
-        // ZATVÁRAME NASTAVENIA -> Vrátime všetko do pôvodného stavu
+        // ZATVÁRAME NASTAVENIA -> vraciame hodiny a čistíme stav
         settingsBox.style.display = 'none';
         if (hodinyEl) hodinyEl.style.display = 'flex';
         if (infoRiadokEl) infoRiadokEl.style.display = 'flex';
-        if (croContainer) croContainer.style.display = 'flex'; // Vráti späť pod-stanice cro
-        if (hlavnaMriezka) hlavnaMriezka.style.display = 'grid'; // Vráti hlavnú mriežku rádií
-        currentPlayingType = "cro"; // Nastavíme typ, aby stopRadio vedelo, že sme sa vrátili ku cro sub-panelu
-    } else {
-        // OTVÁRAME NASTAVENIA -> Skryjeme úplne všetko okrem panelu nastavení
-        document.body.classList.remove('weather-details-mode');
         
-        settingsBox.style.with = "100%"; // Roztiahne na plnú šírku sekcie
+        // Odstránime oranžový rámček z hlavného CRO tlačidla, keďže už sme z menu odišli
+        const hlavnyCro = document.querySelector('.btn.cro');
+        if (hlavnyCro) hlavnyCro.classList.remove('playing');
+        
+        // Schováme spodnú lištu úplne
+        aktualizujSubPanely("none");
+        currentPlayingType = ""; 
+    } else {
+        // OTVÁRAME NASTAVENIA -> mriežka naľavo ostáva, vpravo sa vymenia hodiny za nastavenia
+        document.body.classList.remove('weather-details-mode');
         settingsBox.style.display = 'block';
         
         if (hodinyEl) hodinyEl.style.display = 'none';
         if (infoRiadokEl) infoRiadokEl.style.display = 'none';
-        if (croContainer) croContainer.style.display = 'none';
-        if (hlavnaMriezka) hlavnaMriezka.style.display = 'none'; // Schová celú ľavú mriežku s tlačidlami rádií
+        if (spotifyContainer) spotifyContainer.style.display = 'none';
+        if (croContainer) croContainer.style.display = 'none'; // Skryje sub-lištu, aby nezavadzala pod nastaveniami
+        
+        // Zvýrazníme tlačidlo CRO, z ktorého sme nastavenia vyvolali
+        const hlavnyCro = document.querySelector('.btn.cro');
+        if (hlavnyCro) hlavnyCro.classList.add('playing');
         
         currentPlayingType = "settings";
     }
