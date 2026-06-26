@@ -17,6 +17,9 @@
         body:not(.weather-details-mode) .weather-details-only { display: none !important; }
         body.weather-details-mode .weather-details-hide { display: none !important; }
         body.weather-details-mode .weather-details-only { display: flex !important; }
+        /* OPRAVA: Keď je otvorený detail počasia, hodiny a rádiový info riadok sa natvrdo skryjú */
+        body.weather-details-mode #time,
+        body.weather-details-mode .radio-info-wrapper { display: none !important; }
         
         body { margin: 0; padding: 0; background-color: #000; color: #fff;
             font-family: -apple-system-short-condensed, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -513,6 +516,9 @@ body.full-night-mode #night-bottom-info {
     </div>
             
     <script>
+      // OPRAVA: Inicializácia chýbajúcej premennej pre časovač počasia
+let pocasieTimer;
+        
 const VOLUME_MAP = { 
     'slovensko': 0.3, 'fm': 0.3, 'devin': 0.5, 'litera': 0.5, 'regina': 0.3,
     'fun': 1.0, 'funchill': 0.5, 'funczsk': 0.5, 'fun8090': 0.5, 'milenialky': 0.5,
@@ -1268,12 +1274,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // NOVÉ: Ak klikneš kamkoľvek na pravú stranu v šetriči, prebudí to displej rovnako ako klik na hodiny
     if (pravaStranaEl) {
-        pravaStranaEl.addEventListener('pointerdown', (e) => {
-            if (document.body.classList.contains('screensaver-mode')) {
-                klikNaHodiny(e);
-            }
-        });
-    }
+    pravaStranaEl.addEventListener('pointerdown', (e) => {
+        // OPRAVA: Klik prebudí displej z čierneho šetriča iba vtedy, ak nesleduješ detail grafu
+        if (document.body.classList.contains('screensaver-mode') && !document.body.classList.contains('weather-details-mode')) {
+            klikNaHodiny(e);
+        }
+    });
+}
     if (weatherEl) {
         weatherEl.addEventListener('pointerdown', (e) => {
             otvorPocasie(e, 'screensaver');
