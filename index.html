@@ -539,6 +539,7 @@ function inicializujPlochuNastaveni() {
     });
 }
 function prepniNastavenia() {
+    clearTimeout(idleTimer); // Okamžite stopneme šetrič na pozadí
     audio.pause(); audio.src = "";
     const settingsBox = document.getElementById('settings-container');
     const isVisible = settingsBox.style.display === 'block';
@@ -1170,27 +1171,41 @@ function openSpotify(id) {
 let idleTimer;
 
 function resetIdleTimer() {
+    // Ak sú otvorené nastavenia, šetrič sa nesmie spustiť!
+    const settingsBox = document.getElementById('settings-container');
+    const nastaveniaSuOtvorene = settingsBox && settingsBox.style.display === 'block';
+    
+    if (nastaveniaSuOtvorene) {
+        document.body.classList.remove('screensaver-mode');
+        clearTimeout(idleTimer);
+        return; // Úplne prerušíme zapínanie šetriča
+    }
+
     document.body.classList.remove('screensaver-mode');
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => document.body.classList.add('screensaver-mode'), 20000);
 }
-
-document.addEventListener('touchstart', function(e) {
-    if (e.target.closest('#time') || e.target.closest('#ss-weather-trigger') || e.target.closest('#weather-details-top-inline') || e.target.closest('#extended-forecast-container')) {
-        return; 
-    }
-    resetIdleTimer();
-}, { passive: true });
-
+        
 function klikNaHodiny(e) {
     if (e) { e.stopPropagation(); e.preventDefault(); }
-    if (document.body.classList.contains('screensaver-mode')) { resetIdleTimer(); } 
-    else { clearTimeout(idleTimer); document.body.classList.add('screensaver-mode'); }
-}
-
-// --- OVLÁDANIE AUTOMATICKÉHO ČASOVAČA ---
-let pocasieTimer;
+    
+    // Ak sme v šetriči a pod ním visia nastavenia, kompletne preberieme celý kiosk k životu
+    if (document.body.classList.contains('screensaver-mode')) {
+        const settingsBox = document.getElementById('settings-container');
+        const nastaveniaSuOtvorene = settingsBox && settingsBox.style.display === 'block';
         
+        if (nastaveniaSuOtvorene) {
+            document.body.classList.remove('screensaver-mode'); // Vypneme šetrič (zobrazí sa mriežka)
+            prepniNastavenia(); // Toto zatvorí nastavenia a vráti veľké hodiny do normálu
+            return;
+        }
+        resetIdleTimer(); 
+    }  
+    else { 
+        clearTimeout(idleTimer); 
+        document.body.classList.add('screensaver-mode'); 
+    }
+}        
 function otvorPocasie(e, zdroj = 'radio') {
     if (e) { e.stopPropagation(); if (e.cancelable) e.preventDefault(); }
     weatherOpenedFrom = zdroj;
@@ -1246,13 +1261,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeEl = document.getElementById('time');
     const weatherEl = document.getElementById('ss-weather-trigger');
     const grafContainer = document.getElementById('weather-details-top-inline');
+    // NOVÉ: Nájdeme celú pravú stranu šetriča
+    const pravaStranaEl = document.querySelector('.ss-right-col');
 
     if (timeEl) {
         timeEl.addEventListener('pointerdown', (e) => {
             klikNaHodiny(e);
         });
     }
-
+    // NOVÉ: Ak klikneš kamkoľvek na pravú stranu v šetriči, prebudí to displej rovnako ako klik na hodiny
+    if (pravaStranaEl) {
+        pravaStranaEl.addEventListener('pointerdown', (e) => {
+            if (document.body.classList.contains('screensaver-mode')) {
+                klikNaHodiny(e);
+            }
+        });
+    }
     if (weatherEl) {
         weatherEl.addEventListener('pointerdown', (e) => {
             otvorPocasie(e, 'screensaver');
@@ -1265,9 +1289,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 zatvorPocasie(e);
             }
         });
-    } // <-- TÁTO ZÁTVORKA TU CHÝBALA (uzatvára "if (grafContainer)")
+    } 
 
-    // PRIDANÉ NA KONIEC DOMContentLoaded: Načítanie posledného rádia z pamäte pre vypínač
+    // Načítanie posledného rádia z pamäte pre vypínač
     const savedRadioUrl = localStorage.getItem('kiosk_last_radio_url');
     const savedRadioType = localStorage.getItem('kiosk_last_radio_type');
     
@@ -1280,8 +1304,7 @@ document.addEventListener('DOMContentLoaded', () => {
             radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
         }
     }
-}); // Použitá správna uzatváracia zátvorka pre DOMContentLoaded
-
+});
 async function hladajMesto() {
    // return; // Týmto by sme funkciu bezpečne vypneme bez toho, aby sme ju mazali
     
