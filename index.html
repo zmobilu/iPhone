@@ -1136,7 +1136,9 @@ function showSpotify() {
     if(document.getElementById('settings-container')) document.getElementById('settings-container').style.style.display = 'none';
     if(document.getElementById('time')) document.getElementById('time').style.display = 'flex';
     if(document.querySelector('.radio-info-wrapper')) document.querySelector('.radio-info-wrapper').style.display = 'flex';
-    if(document.getElementById('cro-links-container')) document.getElementById('cro-links-container').style.display = 'none'; // Skryje CRO lištu, keď sa zapne Spotify
+    // TU BOL PREKLEP (.style.style) - teraz je to opravené:
+    if(document.getElementById('spotify-links-container')) document.getElementById('spotify-links-container').style.display = 'flex';
+    if(document.getElementById('cro-links-container')) document.getElementById('cro-links-container').style.display = 'none'; // Schováme CRO lištu, keď sme v Spotify
 
     // 2. Tvoja audio stopka z notebooku
     audio.pause(); audio.src = "";
