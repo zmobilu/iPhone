@@ -59,7 +59,7 @@
         #fun-links-container         { display: none; flex-direction: row; justify-content: center;  gap: 12px; margin-top: 25px; width: 100%; }
         #komerce-links-container     { display: none; flex-direction: row; justify-content: center;  gap: 12px; margin-top: 25px; width: 100%; }
         #rock-links-container        { display: none; flex-direction: row; justify-content: center;  gap: 12px; margin-top: 25px; width: 100%; }
-        #spotify-links-container     { display: none; flex-direction: row; justify-content: center;  gap: 12px; margin-top: 25px; width: 100%; background: #0a0a0a; border-radius: 12px; padding: 10px; border: 1px solid #222; }
+        #spotify-links-container     { display: none; flex-direction: row; justify-content: center;  gap: 6px; margin-top: 25px; width: 100%; }
         #cro-links-container         { display: none; flex-direction: row; justify-content: center;  gap: 12px; margin-top: 25px; width: 100%; }
         
         .sub-btn { 
@@ -420,35 +420,31 @@ body.full-night-mode #night-bottom-info {
                 <iframe id="spotify-player-frame" src="" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius: 12px; border: none;"></iframe>
             </div>
 
-            <div id="settings-container" style="display: none; width: 100%; height: 68vh; padding: 10px 15px; box-sizing: border-box; background: #050505; border-radius: 18px; border: 1px solid #222; overflow: hidden;">
-            <h2 style="color: #ff9f0a; margin-top: 0; font-weight: 200; font-size: 3vw; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #222; padding-bottom: 50px;">Nastavenia</h2>
+            <div id="settings-container" style="display: none; width: 100%; height: 68vh; padding: 10px; box-sizing: border-box; background: #050505; border-radius: 18px; border: 1px solid #222; overflow-y: auto;">
+    <h2 style="color: #ff9f0a; margin-top: 0; font-weight: 200; font-size: 3vw; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #222; padding-bottom: 5px;">Nastavenia</h2>
 
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 5px;">
-    <!-- Riadok: Noc -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 8px 12px; border-radius: 12px; border: 1px solid #222;">
-        <span style="font-size: 2.3vw; color: #fff;"><i class="fa-solid fa-moon" style="color: #307CEB; margin-right: 8px;"></i> Noc</span>
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <button onclick="zmenNastavenieCasu('od')" id="set-night-from" style="background: #222; color: #fff; border: 1px solid #444; padding: 5px 10px; border-radius: 8px; font-size: 2vw; cursor: pointer;">20:00</button>
-            <span style="color: #555;">-</span>
-            <button onclick="zmenNastavenieCasu('do')" id="set-night-to" style="background: #222; color: #fff; border: 1px solid #444; padding: 5px 10px; border-radius: 8px; font-size: 2vw; cursor: pointer;">05:20</button>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-radius: 12px; border: 1px solid #222;">
+        <span style="font-size: 2.5vw; color: #fff;"><i class="fa-solid fa-moon" style="color: #307CEB; margin-right: 10px;"></i> </span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+                <button onclick="zmenNastavenieCasu('od')" id="set-night-from" style="background: #222; color: #fff; border: 1px solid #444; padding: 8px 15px; border-radius: 8px; font-size: 2vw; cursor: pointer;">20:00</button>
+                <span style="color: #555;">-</span>
+                <button onclick="zmenNastavenieCasu('do')" id="set-night-to" style="background: #222; color: #fff; border: 1px solid #444; padding: 8px 15px; border-radius: 8px; font-size: 2vw; cursor: pointer;">05:20</button>
+            </div>
         </div>
-    </div>
-    
-    <!-- Riadok: Odklad -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 8px 12px; border-radius: 12px; border: 1px solid #222;">
-        <span style="font-size: 2.3vw; color: #fff;"><i class="fa-solid fa-hourglass-half" style="color: #ff9f0a; margin-right: 8px;"></i> Odklad</span>
-        <button onclick="zmenDobuOdkladu()" id="set-snooze-time" style="background: #222; color: #fff; border: 1px solid #444; padding: 5px 10px; border-radius: 8px; font-size: 2vw; cursor: pointer;">1 min</button>
-    </div>
-    
-    <!-- Riadok: Farba -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 8px 12px; border-radius: 12px; border: 1px solid #222;">
-        <span style="font-size: 2.3vw; color: #fff;"><i class="fa-solid fa-palette" style="color: #eb0028; margin-right: 8px;"></i> Farba</span>
-        <div style="display: flex; gap: 6px;">
-            <div onclick="nastavFarbuNoci('#ffff00', this)" class="color-picker-dot" style="background: #ffff00; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
-            <div onclick="nastavFarbuNoci('#eb0028', this)" class="color-picker-dot" style="background: #eb0028; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
-            <div onclick="nastavFarbuNoci('#ffa500', this)" class="color-picker-dot" style="background: #ffa500; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
-            <div onclick="nastavFarbuNoci('#32CD32', this)" class="color-picker-dot" style="background: #32CD32; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
-            <div onclick="nastavFarbuNoci('#ffffff', this)" class="color-picker-dot" style="background: #ffffff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-radius: 12px; border: 1px solid #222;">
+            <span style="font-size: 2.5vw; color: #fff;"><i class="fa-solid fa-hourglass-half" style="color: #ff9f0a; margin-right: 10px;"></i> </span>
+            <button onclick="zmenDobuOdkladu()" id="set-snooze-time" style="background: #222; color: #fff; border: 1px solid #444; padding: 8px 15px; border-radius: 8px; font-size: 2vw; cursor: pointer;">1 min</button>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-radius: 12px; border: 1px solid #222;">
+            <span style="font-size: 2.5vw; color: #fff;"><i class="fa-solid fa-palette" style="color: #eb0028; margin-right: 10px;"></i> </span>
+            <div style="display: flex; gap: 8px;">
+                <div onclick="nastavFarbuNoci('#ffff00', this)" class="color-picker-dot" style="background: #ffff00; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
+                <div onclick="nastavFarbuNoci('#eb0028', this)" class="color-picker-dot" style="background: #eb0028; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
+                <div onclick="nastavFarbuNoci('#ffa500', this)" class="color-picker-dot" style="background: #ffa500; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
+                <div onclick="nastavFarbuNoci('#32CD32', this)" class="color-picker-dot" style="background: #32CD32; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
+                <div onclick="nastavFarbuNoci('#ffffff', this)" class="color-picker-dot" style="background: #ffffff; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -475,12 +471,13 @@ body.full-night-mode #night-bottom-info {
                 <button onclick="playRadio('https://ice.abradio.cz/casrock128.mp3', this, 'casrock')" class="sub-btn"><img src="https://www.casrock.cz/wp-content/themes/casrock/assets/images/logo.png" style="padding: 6px;"></button>
             </div>
 
-            <div id="spotify-links-container" class="ss-hide" style="display: none; flex-direction: row; justify-content: center; gap: 12px; margin-top: 25px; width: 100%;">
-                    <button onclick="openSpotify('67q2IYkPShkkWCbV14rRil')" style="background:none; border:none; color:white; font-size:24px;">J🎵</button>
-                    <button onclick="openSpotify('63bq913mo2Dv0KIOnnUzam')" style="background:none; border:none; color:white; font-size:24px;">D🎸</button>
-                    <button onclick="openSpotify('2xLrXn0HleL3pJvnRWnRcJ')" style="background:none; border:none; color:white; font-size:24px;">R🔥</button>
-                    <button onclick="openSpotify('search')" style="background:none; border:none; color:white; font-size:24px;">S🔍</button>
-           </div>
+            <div id="spotify-links-container" class="ss-hide" style="display: none; flex-direction: row; justify-content: center; gap: 6px; margin-top: 25px; width: 100%;">
+                    <button onclick="openSpotify('67q2IYkPShkkWCbV14rRil')" style="background:none; border:none; color:white; font-size:24px;">🎵</button>
+                    <button onclick="openSpotify('63bq913mo2Dv0KIOnnUzam')" style="background:none; border:none; color:white; font-size:24px;">🎸</button>
+                    <button onclick="openSpotify('2xLrXn0HleL3pJvnRWnRcJ')" style="background:none; border:none; color:white; font-size:24px;">🔥</button>
+                    <button onclick="openSpotify('search')" style="background:none; border:none; color:white; font-size:24px;">🔍</button>
+                    <button onclick="prepniNastavenia()" class="sub-btn" style="color:#aaa; font-size:24px; background:#111; border:1px solid #333;"><i class="fa-solid fa-gear"></i></button>
+            </div>
 
             <div id="komerce-links-container" class="ss-hide" style="display: none; flex-direction: row; justify-content: center; gap: 12px; margin-top: 25px; width: 100%;">
                 <button onclick="playRadio('https://stream.bauermedia.sk/expres-hi.mp3', this, 'expres')" class="sub-btn"><img src="https://raw.githubusercontent.com/zmobilu/assets/main/LogoExpress.png"></button>
@@ -489,11 +486,11 @@ body.full-night-mode #night-bottom-info {
                 <button onclick="playRadio('https://stream.radiovlna.sk/vlna-hi.mp3', this, 'vlna')" class="sub-btn"><img src="https://raw.githubusercontent.com/zmobilu/assets/main/LogoVlna.png"></button>
             </div>
 
-            <div id="cro-links-container" class="ss-hide" style="display: none; flex-direction: row; justify-content: center; gap: 12px; margin-top: 25px; width: 100%;">
+            <div id="cro-links-container" class="ss-hide">
                 <button onclick="playRadio('https://stream.sunshine-live.de/schranz/mp3-192/', this, 'schranz')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">schranz</button>
                 <button onclick="playRadio('https://stream.sunshine-live.de/melodic_beats/mp3-192/', this, 'melodic')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">melodic</button>
+                <button onclick="playRadio('https://stream.sunshine-live.de/hardtechno/mp3-192', this, 'h-techno')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">techno</button>
                 <button onclick="playRadio('https://stream.sunshine-live.de/drumbass/mp3-192', this, 'Drumcode')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">DrumBass 🔊</button>
-                <button onclick="prepniNastavenia()" class="sub-btn" style="color:#aaa; font-size:24px; background:#111; border:1px solid #333;"><i class="fa-solid fa-gear"></i></button>
            </div>
 
             <div id="date-block" class="ss-only">
@@ -544,27 +541,28 @@ function inicializujPlochuNastaveni() {
 function prepniNastavenia() {
     audio.pause(); audio.src = "";
     const settingsBox = document.getElementById('settings-container');
+    const spotifyFrame = document.getElementById('spotify-player-frame');
     const isVisible = settingsBox.style.display === 'block';
     
     const hodinyEl = document.getElementById('time');
     const infoRiadokEl = document.querySelector('.radio-info-wrapper');
-    const croContainer = document.getElementById('cro-links-container'); // PRIDANÉ
+    const spotifyContainer = document.getElementById('spotify-links-container');
     
-    // if (spotifyFrame) spotifyFrame.src = "";
-    // document.querySelectorAll('#spotify-links-container .sub-btn').forEach(btn => btn.classList.remove('playing'));
+    if (spotifyFrame) spotifyFrame.src = "";
+    document.querySelectorAll('#spotify-links-container .sub-btn').forEach(btn => btn.classList.remove('playing'));
     
     if (isVisible) {
         settingsBox.style.display = 'none';
         if (hodinyEl) hodinyEl.style.display = 'flex';
         if (infoRiadokEl) infoRiadokEl.style.display = 'flex';
-        if (croContainer) croContainer.style.display = 'flex'; // Vráti CRO lištu s kolieskom späť na obrazovku
-        currentPlayingType = "S-techno"; 
+        if (spotifyContainer) spotifyContainer.style.display = 'flex'; // Vráti lištu playlistov
+        currentPlayingType = "spotify";
     } else {
         document.body.classList.remove('weather-details-mode');
         settingsBox.style.display = 'block';
         if (hodinyEl) hodinyEl.style.display = 'none';
         if (infoRiadokEl) infoRiadokEl.style.display = 'none';
-        if (croContainer) croContainer.style.display = 'none'; // ÚPLNE schová CRO lištu pri otvorení nastavení
+        if (spotifyContainer) spotifyContainer.style.display = 'none'; // ÚPLNE schová lištu playlistov s kolieskom
         currentPlayingType = "settings";
     }
 }
@@ -1132,29 +1130,12 @@ function stopRadio() {
 }
     
 function showSpotify() {
-    // 1. Tvoja logika z notebooku (zabezpečí návrat prvkov na obrazovku)
-    if(document.getElementById('settings-container')) document.getElementById('settings-container').style.style.display = 'none';
-    if(document.getElementById('time')) document.getElementById('time').style.display = 'flex';
-    if(document.querySelector('.radio-info-wrapper')) document.querySelector('.radio-info-wrapper').style.display = 'flex';
-    // TU BOL PREKLEP (.style.style) - teraz je to opravené:
-    if(document.getElementById('spotify-links-container')) document.getElementById('spotify-links-container').style.display = 'flex';
-    if(document.getElementById('cro-links-container')) document.getElementById('cro-links-container').style.display = 'none'; // Schováme CRO lištu, keď sme v Spotify
-
-    // 2. Tvoja audio stopka z notebooku
-    audio.pause(); audio.src = "";
-
-    // 3. PRIDANÉ PRE IPHONE: Správne priradenie stavov a vizuálna odozva
-    currentPlayingType = "spotify"; 
-    resetIdleTimer();
-
-    // Odstránenie rámčekov z hrajúcich rádií a rozsvietenie Spotify gombíka
-    document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
-    document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing'));
-    
+    stopRadio();
+    currentPlayingType = "spotify";
+    aktualizujSubPanely("spotify");
     const spotifyBtn = document.querySelector('.spotify');
     if (spotifyBtn) spotifyBtn.classList.add('playing');
-
-    // Informácia pre šetrič obrazovky
+    resetIdleTimer();
     const radioInfoEl = document.getElementById('ss-radio-info');
     if (radioInfoEl) {
         radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.7; text-transform: none; margin-right: 8px;">hrá:</small>SPOTIFY`;
