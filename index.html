@@ -559,7 +559,6 @@ function prepniNastavenia() {
         settingsBox.style.display = 'none';
         if (hodinyEl) hodinyEl.style.display = 'flex';
         if (infoRiadokEl) infoRiadokEl.style.display = 'flex';
-        if (spotifyContainer) spotifyContainer.style.display = 'none'; // Po zatvorení nastavení nechceme spotify
         if (croContainer) croContainer.style.display = 'flex';        // VRÁTI lištu s techno rádiami späť
         currentPlayingType = "cro"; // Nastavíme typ zodpovedajúci materskému tlačidlu blesku
     } else {
@@ -567,7 +566,6 @@ function prepniNastavenia() {
         settingsBox.style.display = 'block';
         if (hodinyEl) hodinyEl.style.display = 'none';
         if (infoRiadokEl) infoRiadokEl.style.display = 'none';
-        if (spotifyContainer) spotifyContainer.style.display = 'none';
         if (croContainer) croContainer.style.display = 'none';        // SKRYJE lištu s techno rádiami pri otvorení nastavení
         currentPlayingType = "settings";
     }
