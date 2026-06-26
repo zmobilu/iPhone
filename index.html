@@ -188,7 +188,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            pointer-events: none;
+            pointer-events: auto !important; /* OPRAVA: Element bude prijímať dotyky vždy */
         }
         body.screensaver-mode #ss-radio-info { display: flex !important; }
         body.weather-details-mode #ss-radio-info { display: none !important; }
@@ -362,7 +362,7 @@ body.full-night-mode #night-bottom-info {
         </div>
         
         <div class="ss-right-col">
-            <div id="ss-radio-info" class="weather-details-hide" onpointerdown="event.stopPropagation(); event.preventDefault(); stopRadio();" style="pointer-events: auto !important; cursor: pointer; z-index: 9999 !important;"></div>
+           <div id="ss-radio-info" class="weather-details-hide" onpointerdown="event.stopPropagation(); event.preventDefault(); stopRadio(false, event);" style="pointer-events: auto !important; cursor: pointer; z-index: 9999 !important;"></div>
             
             <div id="time" class="weather-details-hide">
                 <span id="h-part" class="hours-part">00</span>
@@ -1100,7 +1100,10 @@ function aktualizujSubPanely(type) {
     if (croContainer) croContainer.style.display = ['S-techno', 'schranz', 'melodic', 'Drumcode', 'cro'].includes(type) ? 'flex' : 'none';
 }
     
-function stopRadio(isPowerButton = false) {
+function stopRadio(isPowerButton = false, event = null) {
+    // OPRAVA: Ak funkciu vyvolal klik na nápis v šetriči, zastavíme prebublávanie, aby neodpálilo šetrič
+    if (event) { event.stopPropagation(); }
+
     const settingsBox = document.getElementById('settings-container');
     const nastaveniaSuOtvorene = settingsBox && settingsBox.style.display === 'block';
 
