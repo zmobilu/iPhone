@@ -318,7 +318,7 @@ body.full-night-mode #night-bottom-info {
     <audio id="audioPlayer" preload="none" playsinline></audio>
     
     <div class="buttons-section">
-        <button onpointerdown="stopRadio()" class="btn vypni" style="padding: 20px 0; min-height: 90px; width: 100%;"><i class="fa-solid fa-power-off"></i></button>
+        <button onpointerdown="stopRadio(true)" class="btn vypni" style="padding: 20px 0; min-height: 90px; width: 100%;"><i class="fa-solid fa-power-off"></i></button>
         <button onclick="playRadio('https://icecast.stv.livebox.sk/slovensko_128.mp3', this, 'slovensko')" class="btn rozhlas" style="background:#00547E;"><img src="https://raw.githubusercontent.com/zmobilu/assets/main/LogoSRo.png" style="max-width:80%; max-height:70%; object-fit:contain;"></button>
         <button onclick="playRadio('https://stream.funradio.sk/fun192.mp3', this, 'fun')" class="btn fun" style="background:#ffffff;"><img src="https://raw.githubusercontent.com/zmobilu/assets/main/LogoFunRadio.png" style="max-width:75%; max-height:70%; object-fit:contain;"></button>
         <button onclick="playRadio('https://stream.bauermedia.sk/rock-hi.mp3', this, 'rock')" class="btn rock" style="background:#000000;"><img src="https://raw.githubusercontent.com/zmobilu/assets/main/LogoAntenaROCK.png" style="max-width:70%; max-height:60%; object-fit:contain;"></button>
@@ -1078,9 +1078,11 @@ function aktualizujSubPanely(type) {
     if (croContainer) croContainer.style.display = ['S-techno', 'schranz', 'melodic', 'h-techno', 'Drumcode'].includes(type) ? 'flex' : 'none';
 }
     
-function stopRadio() {
-    // AK RÁDIO PRÁVE HRÁ (alebo hrá Spotify): zastavíme ho
-    if (currentPlayingType !== "") {
+function stopRadio(isPowerButton = false) {
+    const settingsBox = document.getElementById('settings-container');
+    const nastaveniaSuOtvorene = settingsBox && settingsBox.style.display === 'block';
+
+    if (currentPlayingType !== "" && currentPlayingType !== "settings") {
         audio.pause(); 
         audio.src = "";
         currentPlayingType = "";
@@ -1088,15 +1090,30 @@ function stopRadio() {
         document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
         document.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('playing')); 
         
+        const container = document.getElementById('integrated-spotify-container');
+        const frame = document.getElementById('spotify-player-frame');
+        if (container) container.style.display = 'none';
+        if (frame) frame.src = "";
+        
         aktualizujSubPanely("none");
-        resetIdleTimer();
-    
-    // UPRAVENÉ: Text po vypnutí rádia
+        resetIdleTimer(false);
+        
         const radioInfoEl = document.getElementById('ss-radio-info');
-        if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
+        if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;   
     }
-    // UPRAVENÉ: Načítanie z localStorage pri opätovnom zapnutí
-    else {
+    else if (nastaveniaSuOtvorene) {
+        prepniNastavenia(); 
+        const savedRadioUrl = localStorage.getItem('kiosk_last_radio_url');
+        const savedRadioType = localStorage.getItem('kiosk_last_radio_type');
+        
+        if (savedRadioUrl && savedRadioType) {
+            playRadio(savedRadioUrl, null, savedRadioType);
+        } else if (lastRadioUrl !== "") {
+            playRadio(lastRadioUrl, lastRadioElement, lastRadioType);
+        }
+    }
+    // Táto úprava zaistí, že sa rádio nespustí samo pri kliku na Spotify
+    else if (isPowerButton) {
         const savedRadioUrl = localStorage.getItem('kiosk_last_radio_url');
         const savedRadioType = localStorage.getItem('kiosk_last_radio_type');
         
@@ -1105,6 +1122,10 @@ function stopRadio() {
         } 
         else if (lastRadioUrl !== "") {
             playRadio(lastRadioUrl, lastRadioElement, lastRadioType);
+        }
+        else {
+            const prveTlacitko = document.querySelector('.buttons-section .btn:not(.vypni):not(.spotify)');
+            if (prveTlacitko) prveTlacitko.click();
         }
     }
 }
