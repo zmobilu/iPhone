@@ -1192,26 +1192,41 @@ function resetIdleTimer() {
     idleTimer = setTimeout(() => document.body.classList.add('screensaver-mode'), 20000);
 }
         
+// === NAHRADIŤ FUNKCIU klikNaHodiny ===
 function klikNaHodiny(e) {
     if (e) { e.stopPropagation(); e.preventDefault(); }
     
-    // Ak sme v šetriči a pod ním visia nastavenia, kompletne preberieme celý kiosk k životu
-    if (document.body.classList.contains('screensaver-mode')) {
+    const bodyEl = document.body;
+
+    // PRERUŠENIE NOCI: Ak klikneme v celoobrazovkovom nočnom režime
+    if (bodyEl.classList.contains('full-night-mode')) {
+        bodyEl.classList.remove('full-night-mode');
+        
+        // Načítame aktuálny čas v milisekundách + pripočítame minúty z nastavení (cfgSnoozeMin) premenené na milisekundy
+        nocnyRezimSnoozeDo = Date.now() + (cfgSnoozeMin * 60 * 1000);
+        
+        resetIdleTimer();
+        updateClock(); // Okamžite prekreslíme hodiny do denného režimu
+        return;
+    }
+    
+    // Pôvodná logika pre prepínanie bežného šetriča (Meteostanice)
+    if (bodyEl.classList.contains('screensaver-mode')) {
         const settingsBox = document.getElementById('settings-container');
         const nastaveniaSuOtvorene = settingsBox && settingsBox.style.display === 'block';
         
         if (nastaveniaSuOtvorene) {
-            document.body.classList.remove('screensaver-mode'); // Vypneme šetrič (zobrazí sa mriežka)
-            prepniNastavenia(); // Toto zatvorí nastavenia a vráti veľké hodiny do normálu
+            bodyEl.classList.remove('screensaver-mode');
+            prepniNastavenia();
             return;
         }
         resetIdleTimer(); 
     }  
     else { 
         clearTimeout(idleTimer); 
-        document.body.classList.add('screensaver-mode'); 
+        bodyEl.classList.add('screensaver-mode'); 
     }
-}        
+}
 function otvorPocasie(e, zdroj = 'radio') {
     if (e) { e.stopPropagation(); if (e.cancelable) e.preventDefault(); }
     weatherOpenedFrom = zdroj;
