@@ -544,32 +544,31 @@ function inicializujPlochuNastaveni() {
 function prepniNastavenia() {
     audio.pause(); audio.src = "";
     const settingsBox = document.getElementById('settings-container');
-    const spotifyFrame = document.getElementById('spotify-player-frame');
     const isVisible = settingsBox.style.display === 'block';
     
     const hodinyEl = document.getElementById('time');
     const infoRiadokEl = document.querySelector('.radio-info-wrapper');
-    const spotifyContainer = document.getElementById('spotify-links-container');
     const croContainer = document.getElementById('cro-links-container'); // PRIDANÉ
     
-    if (spotifyFrame) spotifyFrame.src = "";
-    document.querySelectorAll('#spotify-links-container .sub-btn').forEach(btn => btn.classList.remove('playing'));
+    // if (spotifyFrame) spotifyFrame.src = "";
+    // document.querySelectorAll('#spotify-links-container .sub-btn').forEach(btn => btn.classList.remove('playing'));
     
     if (isVisible) {
         settingsBox.style.display = 'none';
         if (hodinyEl) hodinyEl.style.display = 'flex';
         if (infoRiadokEl) infoRiadokEl.style.display = 'flex';
-        if (croContainer) croContainer.style.display = 'flex';        // VRÁTI lištu s techno rádiami späť
-        currentPlayingType = "cro"; // Nastavíme typ zodpovedajúci materskému tlačidlu blesku
+        if (croContainer) croContainer.style.display = 'flex'; // Vráti CRO lištu s kolieskom späť na obrazovku
+        currentPlayingType = "S-techno"; 
     } else {
         document.body.classList.remove('weather-details-mode');
         settingsBox.style.display = 'block';
         if (hodinyEl) hodinyEl.style.display = 'none';
         if (infoRiadokEl) infoRiadokEl.style.display = 'none';
-        if (croContainer) croContainer.style.display = 'none';        // SKRYJE lištu s techno rádiami pri otvorení nastavení
+        if (croContainer) croContainer.style.display = 'none'; // ÚPLNE schová CRO lištu pri otvorení nastavení
         currentPlayingType = "settings";
     }
-}        
+}
+        
 function zmenNastavenieCasu(typ) {
     let povodny = (typ === 'od') ? cfgNocOd : cfgNocDo;
     let novy = prompt(`Zadaj čas pre ${typ === 'od' ? 'ZAČIATOK' : 'KONIEC'} noci (HH:MM):`, povodny);
@@ -1137,7 +1136,7 @@ function showSpotify() {
     if(document.getElementById('settings-container')) document.getElementById('settings-container').style.style.display = 'none';
     if(document.getElementById('time')) document.getElementById('time').style.display = 'flex';
     if(document.querySelector('.radio-info-wrapper')) document.querySelector('.radio-info-wrapper').style.display = 'flex';
-    if(document.getElementById('spotify-links-container')) document.getElementById('spotify-links-container').style.display = 'flex';
+    if(document.getElementById('cro-links-container')) document.getElementById('cro-links-container').style.display = 'none'; // Skryje CRO lištu, keď sa zapne Spotify
 
     // 2. Tvoja audio stopka z notebooku
     audio.pause(); audio.src = "";
