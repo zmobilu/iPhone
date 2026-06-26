@@ -1037,25 +1037,28 @@ const audio = document.getElementById('audioPlayer');
         element.classList.add('playing');
     }
     
-    // Ak klikneme na sub-stanicu, rozsvietime aj jej materské tlačidlo, ktoré je vedľa
-    if (['fm', 'devin', 'litera', 'regina'].includes(type)) {
+    // 1. Doplnené 'slovensko' – zafarbí hlavný rozhlas aj pri hlavnej stanici
+    if (['slovensko', 'fm', 'devin', 'litera', 'regina'].includes(type)) {
         const hlavnyRozhlas = document.querySelector('.rozhlas');
         if (hlavnyRozhlas) hlavnyRozhlas.classList.add('playing');
     }
-    if (['funchill', 'funczsk', 'fun8090', 'milenialky'].includes(type)) {
+    // 2. Doplnené 'fun' – zafarbí Fun rádio
+    if (['fun', 'funchill', 'funczsk', 'fun8090', 'milenialky'].includes(type)) {
         const hlavnyFun = document.querySelector('.btn.fun');
         if (hlavnyFun) hlavnyFun.classList.add('playing');
     }
-    // ZMENENÉ: Odstránili sme 'rock', zostali iba 3 sub-stanice, ktoré rozsvecujú hlavný ROCK gombík v mriežke
-    if (['rockrepublika', 'beat', 'casrock'].includes(type)) {
+    // 3. Doplnené 'rock' – zafarbí Rock rádio
+    if (['rock', 'rockrepublika', 'beat', 'casrock'].includes(type)) {
         const hlavnyRock = document.querySelector('.btn.rock');
         if (hlavnyRock) hlavnyRock.classList.add('playing');
     }
-    if (['expres', 'europa2', 'melody', 'vlna', 'blanik'].includes(type)) {
-        const hlavnyBlanik = document.getElementById('blanik-main-btn');
+    // 4. OPRAVENÉ: Pridané 'blanik' a zmenené hľadanie cez triedu (.btn.blanik) namiesto ID
+    if (['blanik', 'expres', 'europa2', 'melody', 'vlna'].includes(type)) {
+        const hlavnyBlanik = document.querySelector('.btn.blanik');
         if (hlavnyBlanik) hlavnyBlanik.classList.add('playing');
     }
-    if (['S-techno', 'schranz', 'melodic', 'Drumcode', 'cro' ].includes(type)) {
+    // 5. Doplnené 'S-techno' – zafarbí technáč
+    if (['S-techno', 'schranz', 'melodic', 'Drumcode', 'cro'].includes(type)) {
         const hlavnyCro = document.querySelector('.btn.cro');
         if (hlavnyCro) hlavnyCro.classList.add('playing');
     }
