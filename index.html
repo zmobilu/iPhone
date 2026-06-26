@@ -476,7 +476,6 @@ body.full-night-mode #night-bottom-info {
                     <button onclick="openSpotify('63bq913mo2Dv0KIOnnUzam')" style="background:none; border:none; color:white; font-size:24px;">Domko🎸</button>
                     <button onclick="openSpotify('2xLrXn0HleL3pJvnRWnRcJ')" style="background:none; border:none; color:white; font-size:24px;">Rock🔥</button>
                     <button onclick="openSpotify('search')" style="background:none; border:none; color:white; font-size:26px;">Vyber 🔍</button>
-                    <button onclick="prepniNastavenia()" class="sub-btn" style="color:#aaa; font-size:24px; background:#111; border:1px solid #333;"><i class="fa-solid fa-gear"></i></button>
             </div>
 
             <div id="komerce-links-container" class="ss-hide" style="display: none; flex-direction: row; justify-content: center; gap: 12px; margin-top: 25px; width: 100%;">
@@ -489,8 +488,8 @@ body.full-night-mode #night-bottom-info {
             <div id="cro-links-container" class="ss-hide">
                 <button onclick="playRadio('https://stream.sunshine-live.de/schranz/mp3-192/', this, 'schranz')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">schranz</button>
                 <button onclick="playRadio('https://stream.sunshine-live.de/melodic_beats/mp3-192/', this, 'melodic')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">melodic</button>
-                <button onclick="playRadio('https://stream.sunshine-live.de/hardtechno/mp3-192', this, 'h-techno')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">techno</button>
                 <button onclick="playRadio('https://stream.sunshine-live.de/drumbass/mp3-192', this, 'Drumcode')" class="sub-btn" style="color:#fff; font-weight:bold; font-size:14px; background:#111;">DrumBass 🔊</button>
+                <button onclick="prepniNastavenia()" class="sub-btn" style="color:#aaa; font-size:24px; background:#111; border:1px solid #333;"><i class="fa-solid fa-gear"></i></button>
            </div>
 
             <div id="date-block" class="ss-only">
@@ -518,7 +517,7 @@ const VOLUME_MAP = {
     'fun': 1.0, 'funchill': 0.5, 'funczsk': 0.5, 'fun8090': 0.5, 'milenialky': 0.5,
     'expres': 0.5, 'europa2': 1.0, 'melody': 1.0, 'vlna': 0.5,
     'blanik': 1.0, 'rock': 0.5, 'rockrepublika': 0.5, 'beat': 0.5, 'casrock': 0.5, 
-    'S-techno': 0.4, 'schranz': 0.4, 'melodic': 0.5, 'h-techno': 0.4, 'Drumcode': 0.4
+    'S-techno': 0.4, 'schranz': 0.4, 'melodic': 0.5, 'Drumcode': 0.4
 };
  // --- LOGIKA PRE PLOCHU NASTAVENÍ ---
 let cfgNocOd = localStorage.getItem('cfg_night_from') || "20:00";
@@ -541,28 +540,33 @@ function inicializujPlochuNastaveni() {
 function prepniNastavenia() {
     audio.pause(); audio.src = "";
     const settingsBox = document.getElementById('settings-container');
-    const spotifyFrame = document.getElementById('spotify-player-frame');
     const isVisible = settingsBox.style.display === 'block';
     
     const hodinyEl = document.getElementById('time');
     const infoRiadokEl = document.querySelector('.radio-info-wrapper');
-    const spotifyContainer = document.getElementById('spotify-links-container');
-    
-    if (spotifyFrame) spotifyFrame.src = "";
-    document.querySelectorAll('#spotify-links-container .sub-btn').forEach(btn => btn.classList.remove('playing'));
+    const croContainer = document.getElementById('cro-links-container');
+    const hlavnaMriezka = document.querySelector('.buttons-section');
     
     if (isVisible) {
+        // ZATVÁRAME NASTAVENIA -> Vrátime všetko do pôvodného stavu
         settingsBox.style.display = 'none';
         if (hodinyEl) hodinyEl.style.display = 'flex';
         if (infoRiadokEl) infoRiadokEl.style.display = 'flex';
-        if (spotifyContainer) spotifyContainer.style.display = 'flex'; // Vráti lištu playlistov
-        currentPlayingType = "spotify";
+        if (croContainer) croContainer.style.display = 'flex'; // Vráti späť pod-stanice cro
+        if (hlavnaMriezka) hlavnaMriezka.style.display = 'grid'; // Vráti hlavnú mriežku rádií
+        currentPlayingType = "cro"; // Nastavíme typ, aby stopRadio vedelo, že sme sa vrátili ku cro sub-panelu
     } else {
+        // OTVÁRAME NASTAVENIA -> Skryjeme úplne všetko okrem panelu nastavení
         document.body.classList.remove('weather-details-mode');
+        
+        settingsBox.style.with = "100%"; // Roztiahne na plnú šírku sekcie
         settingsBox.style.display = 'block';
+        
         if (hodinyEl) hodinyEl.style.display = 'none';
         if (infoRiadokEl) infoRiadokEl.style.display = 'none';
-        if (spotifyContainer) spotifyContainer.style.display = 'none'; // ÚPLNE schová lištu playlistov s kolieskom
+        if (croContainer) croContainer.style.display = 'none';
+        if (hlavnaMriezka) hlavnaMriezka.style.display = 'none'; // Schová celú ľavú mriežku s tlačidlami rádií
+        
         currentPlayingType = "settings";
     }
 }
@@ -1040,7 +1044,7 @@ const audio = document.getElementById('audioPlayer');
         const hlavnyBlanik = document.getElementById('blanik-main-btn');
         if (hlavnyBlanik) hlavnyBlanik.classList.add('playing');
     }
-    if (['S-techno', 'schranz', 'melodic', 'h-techno', 'Drumcode'].includes(type)) {
+    if (['S-techno', 'schranz', 'melodic', 'Drumcode', 'cro' ].includes(type)) {
         const hlavnyCro = document.querySelector('.btn.cro');
         if (hlavnyCro) hlavnyCro.classList.add('playing');
     }
@@ -1075,7 +1079,7 @@ function aktualizujSubPanely(type) {
     if (spotifyContainer) spotifyContainer.style.display = (type === 'spotify') ? 'flex' : 'none';
     // ZMENENÉ: Riadok sa otvorí len pri kliknutí na sub-stanice (keďže hlavný rock už v sub-paneli nie je)
     if (rockContainer) rockContainer.style.display = ['rockrepublika', 'beat', 'casrock'].includes(type) ? 'flex' : 'none';
-    if (croContainer) croContainer.style.display = ['S-techno', 'schranz', 'melodic', 'h-techno', 'Drumcode'].includes(type) ? 'flex' : 'none';
+    if (croContainer) croContainer.style.display = ['S-techno', 'schranz', 'melodic', 'Drumcode', 'cro'].includes(type) ? 'flex' : 'none';
 }
     
 function stopRadio(isPowerButton = false) {
