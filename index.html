@@ -13,6 +13,53 @@
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/zmobilu/assets/main/kiosk-ikona.png">
     
     <style>
+		/* Badge upozornenia na V2 vpravo hore (nepozretá verzia) */
+         .v2-banner-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #ff9f0a;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.4vw;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 12px rgba(255, 159, 10, 0.5);
+            z-index: 1000;
+            animation: pulse-v2 2s infinite;
+        }
+        
+        @keyframes pulse-v2 {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+		/* Nenápadný štýl po navštívení (Sivá raketka v čiernom kruhu so sivým okrajom) */
+		.v2-banner-btn.is-seen {
+		    animation: none;
+		    background-color: #000000;
+		    border: 1px solid #777777;
+		    border-radius: 50%;
+		    width: 38px;
+		    height: 38px;
+		    padding: 0;
+		    justify-content: center;
+		    box-shadow: none;
+		}
+		
+		.v2-banner-btn.is-seen .rocket-icon {
+		    color: #888888;
+		}
+		
+		.v2-banner-btn.is-seen .v2-text {
+		    display: none; /* Schová text "V2 dostupná" */
+		}
+
         /* Riadenie viditeľnosti pre Inline režim počasia */
         body:not(.weather-details-mode) .weather-details-only { display: none !important; }
         body.weather-details-mode .weather-details-hide { display: none !important; }
@@ -332,7 +379,12 @@ body.full-night-mode #night-bottom-info {
     </div>
     
     <div class="clock-section">
-        
+        <!-- Tlačidlo prechod na V2 -->
+		<button id="v2-btn" class="v2-banner-btn ss-hide" onclick="switchToV2()">
+		    <i class="fa-solid fa-rocket rocket-icon"></i>
+    		    <span class="v2-text">V2 dostupná</span>
+		</button>
+
         <div class="ss-left-col ss-only">
             <div id="ss-weather-trigger" style="cursor: pointer; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
                 <div class="current-weather-group">
@@ -531,7 +583,29 @@ body.full-night-mode #night-bottom-info {
 			let cfgNocDo = localStorage.getItem('cfg_night_to') || "05:20";
 			let cfgSnoozeMin = parseInt(localStorage.getItem('cfg_snooze_min') || "1");
 			let cfgFarbaNoci = localStorage.getItem('cfg_night_color') || "#ffff00";
+
+			// Verzia buildu V2 (pri vydaní veľkých zmien zmeňte napr. na '2.1' a banner sa znova zvýrazní)
+			const CURRENT_V2_BUILD = '2.0';
 			
+			function switchToV2() {
+				// Zapamätáme si, že používateľ túto verziu otvoril/videl
+				localStorage.setItem('v2_seen_build', CURRENT_V2_BUILD);
+				localStorage.setItem('dashboard_version', 'v2');
+				window.location.replace('indexv2.html');
+			}
+			
+			function skontrolujV2Tlacidlo() {
+				const btn = document.getElementById('v2-btn');
+				if (!btn) return;
+			
+				const lastSeenBuild = localStorage.getItem('v2_seen_build');
+			
+				// Ak používateľ túto verziu už videl/otvoril, prepneme tlačidlo na sivý kruh
+				if (lastSeenBuild === CURRENT_V2_BUILD) {
+					btn.classList.add('is-seen');
+				}
+			}
+
 			function inicializujPlochuNastaveni() {
 			    if(document.getElementById('set-night-from')) document.getElementById('set-night-from').textContent = cfgNocOd;
 			    if(document.getElementById('set-night-to')) document.getElementById('set-night-to').textContent = cfgNocDo;
