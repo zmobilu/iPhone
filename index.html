@@ -588,10 +588,15 @@ body.full-night-mode #night-bottom-info {
 			const CURRENT_V2_BUILD = '2.0';
 			
 			function switchToV2() {
-				// Zapamätáme si, že používateľ túto verziu otvoril/videl
-				localStorage.setItem('v2_seen_build', CURRENT_V2_BUILD);
-				localStorage.setItem('dashboard_version', 'v2');
-				window.location.replace('indexv2.html');
+			    // Zapamätáme si, že používateľ túto verziu otvoril/videl
+			    localStorage.setItem('v2_seen_build', CURRENT_V2_BUILD);
+			    localStorage.setItem('dashboard_version', 'v2');
+			    
+			    // Okamžite vizuálne upravíme tlačidlo ešte pred odchodom
+			    const btn = document.getElementById('v2-btn');
+			    if (btn) btn.classList.add('is-seen');
+			
+			    window.location.href = 'indexv2.html';
 			}
 			
 			function skontrolujV2Tlacidlo() {
@@ -1575,6 +1580,9 @@ updateClock();
 
 inicializujPocasie();
 inicializujPlochuNastaveni();
+// NOVÉ: Skontrolujeme stav V2 tlačidla hneď pri štarte
+skontrolujV2Tlacidlo();
+		
 </script>
 </body>
 </html>
