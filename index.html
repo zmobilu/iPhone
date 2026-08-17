@@ -799,8 +799,17 @@ body.full-night-mode #night-bottom-info {
 			            bottomInfoEl.innerHTML = `${denSlovom}, ${denCislom}. ${mesiacSlovom}  •  ${aktualnaTeplota}${radioNocnyText}`;
 			        }
 			    } else {
-			        bodyEl.classList.remove('full-night-mode');
-			    }
+				// Ak sme práve opustili nočný režim
+				if (bodyEl.classList.contains('full-night-mode')) {
+					bodyEl.classList.remove('full-night-mode');
+					// Ak nehrá rádio a nie sú otvorené nastavenia, automaticky aktivujeme šetrič
+					if ((!currentPlayingType || currentPlayingType === "" || currentPlayingType === "none") && !nastaveniaSuOtvorene) {
+						bodyEl.classList.add('screensaver-mode');
+					} else {
+						resetIdleTimer();
+					}
+				}
+					
 			    // --- KONIEC KONTROLY NOČNÉHO REŽIMU ---
 			    
 			    let h_display = h;
