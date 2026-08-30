@@ -1099,15 +1099,20 @@ const audio = document.getElementById('audioPlayer');
     let lastRadioType = "";
 
     function playRadio(url, element, type) {
-    // PRIDANÉ: Uloženie hrajúceho rádia do pamäte
+    // Ak ide o Fun Rádio, použijeme proxy, ktorá vyrieši neplatný SSL certifikát
+    if (url.includes('funradio.sk')) {
+        url = 'https://wsrv.nl/?url=' + encodeURIComponent(url);
+    }
+
     localStorage.setItem('kiosk_last_radio_url', url);
     localStorage.setItem('kiosk_last_radio_type', type);
     
-    // Uložíme si aktuálne rádio do pamäte pre prípadné opätovné zapnutie
     lastRadioUrl = url;
     lastRadioElement = element;
     lastRadioType = type;
     currentPlayingType = type; 
+    
+    // ... zvyšok tvojej pôvodnej funkcie playRadio zostáva rovnaký
         
     // Odstránime oranžový rámček zo všetkých tlačidiel
     document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('playing'));
