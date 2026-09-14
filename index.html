@@ -1092,7 +1092,33 @@ function prepniDenGrafu(e, dayIndex) {
 
 // --- AUDIO LOGIKA ---
 const audio = document.getElementById('audioPlayer');
+// --- AUTO-RESTART PRI ZAKOLÍSANÍ STREAMU (iOS Safari fix) ---
+let isreconnecting = false;
 
+function rekonnektujStream() {
+    // Reagujeme len vtedy, ak malo rádio hrať a nejde o ručné vypnutie
+    if (currentPlayingType && currentPlayingType !== "" && currentPlayingType !== "none" && currentPlayingType !== "settings" && !isreconnecting) {
+        isreconnecting = true;
+        console.log("Zakolísal stream, pokúšam sa o obnovenie prehravania...");
+        
+        setTimeout(() => {
+            if (audio.src) {
+                // Načítame znova aktuálny stream a spustíme ho
+                audio.load();
+                audio.play().then(() => {
+                    isreconnecting = false;
+                }).catch(err => {
+                    console.log("Auto-reconnect zlyhal:", err);
+                    isreconnecting = false;
+                });
+            }
+        }, 2000); // Počkám 2 sekundy na stabilizáciu Wi-Fi
+    }
+}
+
+// Události iOS prehliadača pri výpadku/chybe siete
+audio.addEventListener('error', rekonnektujStream);
+audio.addEventListener('stalled', rekonnektujStream);
 // Nové premenné pre zapamätanie posledného hraného rádia
     let lastRadioUrl = "";
     let lastRadioElement = null;
