@@ -82,7 +82,10 @@
         #mainVolumeSlider { -webkit-appearance: slider-vertical; appearance: slider-vertical; width: 6px; height: 100%; accent-color: #ff9f0a; cursor: pointer; }
 
         body.full-night-mode .volume-panel-container,
-        body.weather-details-mode .volume-panel-container { display: none !important; }
+        body.weather-details-mode .volume-panel-container, 
+		body.screensaver-mode .volume-panel-container { 
+			display: none !important; 
+		}
 
         /* Riadenie viditeľnosti pre Inline režim počasia */
         body:not(.weather-details-mode) .weather-details-only { display: none !important; }
