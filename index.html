@@ -111,8 +111,8 @@
         
         #time { font-size: 24vw; line-height: 0.8; letter-spacing: -4px; display: flex; align-items: baseline; 
                   transform: scaleY(1.05); transform-origin: center; cursor: pointer; }
-        .hours-part { font-weight: 600; color: #ffffff; } 
-        .minutes-part { font-weight: 300; color: #ffffff; margin-left: 5px; } 
+        .hours-part { font-weight: 500; color: #ffffff; } 
+        .minutes-part { font-weight: 500; color: #ffffff; margin-left: 5px; } 
         .red-digit { color: #eb0028 !important; } 
         .blue-digit { color: #307CEB !important; }
         
@@ -173,9 +173,21 @@
         .name-classmates { color: #32CD32 !important; }  
         
         #ss-radio-info {
-            position: absolute; bottom: 25vh; left: 40vw; width: 38vw; font-size: 4.0vw; font-weight: 400; color: #ff9f0a; 
-            text-transform: uppercase; letter-spacing: 2px; display: none; justify-content: center; align-items: center; 
-            pointer-events: auto !important; z-index: 9999 !important;
+            position: absolute; 
+			bottom: 26vh; /* bolo 25*/ 
+			left: 35vw; /* bolo 40*/
+			width: 48vw; /* bolo 38*/ 
+			padding: 15px 0; /* Väčšia výška klikateľnej plochy pre prst */
+			font-size: 5.5vw; /* bolo 4.0*/ 
+			font-weight: 500; /* bolo 400*/ 
+			color: #ff9f0a; 
+            text-transform: uppercase; 
+			letter-spacing: 2px; 
+			display: none; 
+			justify-content: center; 
+			align-items: center; 
+            pointer-events: auto !important; 
+			z-index: 9999 !important;
         }
         body.screensaver-mode #ss-radio-info { display: flex !important; }
         body.weather-details-mode #ss-radio-info { display: none !important; }
@@ -431,13 +443,13 @@
 			{ id: "milenialky", name: "Milenialky", url: "https://funradio-proxy.zmobilu.workers.dev/milenialky128.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoFun2000.png", style: "background:#FFFFFF;", category: "Fun Kontajner" },
 
 			// Komerčné
-			{ id: "jazz", name: "Rádio Jazz", url: "https://radio-jazz-proxy.zmobilu.workers.dev", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoRadioJazz.png", style: "background:#FCF9F2;", category: "Komerčné" },
+			{ id: "jazz", name: "Rádio Jazz", url: "https://radio-jazz-proxy.zmobilu.workers.dev", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoRadioJazz.png", style: "background:#FFFFFF;", category: "Komerčné" },
 			{ id: "impuls", name: "Rádio Impuls", url: "https://proxy-impuls.zmobilu.workers.dev", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoImpuls.png", style: "background:#FED807;", category: "Komerčné" },
 			{ id: "expres", name: "Expres", url: "https://stream.bauermedia.sk/expres-hi.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoExpress.png", style: "background:#000000;", category: "Komerčné" },
 			{ id: "europa2", name: "Europa 2", url: "https://stream.bauermedia.sk/europa2-hi.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoEuropa2.png", style: "background:#0764AA;", category: "Komerčné" },
 			{ id: "melody", name: "Melody", url: "https://stream.bauermedia.sk/melody-hi.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoMelody.png", style: "background:#EBE5CA;", category: "Komerčné" },
 			{ id: "vlna", name: "Rádio Vlna", url: "https://stream.radiovlna.sk/vlna-hi.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoVlna.png", style: "background:#FFFFFF;", category: "Komerčné" },
-			{ id: "rock", name: "Radio rock", url: "https://stream.bauermedia.sk/rock-hi.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoAntenaROCK.png", style: "background:#360A02;", category: "Komerčné" },
+			{ id: "rock", name: "Radio rock", url: "https://stream.bauermedia.sk/rock-hi.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoAntenaROCK.png", style: "background:#000000;", category: "Komerčné" },
 			{ id: "blanik", name: "Blaník", url: "https://ice.abradio.cz/blanikcz128.mp3", img: "https://raw.githubusercontent.com/zmobilu/assets/main/LogoBlanik.png", style: "background:#D53531;", category: "Komerčné" },
 			
 			// Elektronická / Techno scéna
@@ -1145,7 +1157,7 @@
                 resetIdleTimer(false);
                 
                 const radioInfoEl = document.getElementById('ss-radio-info');
-                if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;   
+                if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.85em; opacity: 0.65; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;   
             }
             else if (nastaveniaSuOtvorene) {
                 prepniNastavenia();
@@ -1332,7 +1344,7 @@
                 lastRadioType = savedRadioType;
                 
                 const radioInfoEl = document.getElementById('ss-radio-info');
-                if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.6em; opacity: 0.5; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
+                if (radioInfoEl) radioInfoEl.innerHTML = `<small style="font-size: 0.85em; opacity: 0.65; text-transform: none;">zapni</small> <i class="fa-solid fa-power-off" style="color: #555; font-size: 0.8em; margin-left: 10px;"></i>`;
             }
         });
 
